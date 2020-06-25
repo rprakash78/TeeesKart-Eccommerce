@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Example</title>
+    <style>
+        form{
+            width: 40%;
+            margin: auto;
+            border: 3px dashed blue;
+            border-radius: 25px;
+            padding: 15px;
+            box-shadow: 0 0 15px red;
+            background-color: royalblue;
+        }
+        form:hover{
+            background-color: orangered;
+            width: 30%;
+            margin: auto;
+            border: 2px dotted yellow;
+            border-radius: 50%;
+            padding: 25px;
+            box-shadow: 0 0 15px green;
+            transform: rotate(360deg);
+            transition: all 2s;
+        }
+    </style>
+</head>
+<body>
+    <h1>Main Heading</h1>
+    <h2>Sub Heading</h2>
+    <p>Some Content goes here</p>
+    <p>Some Content goes here</p>
+    <p>Some Content goes here</p>
+    <p>Some Content goes here</p>
+    <p>Some Content goes here</p>
+    <form style="margin: auto; padding: 15px; text-align-last: center">
+        <input type="text" name="name" placeholder="UserName" required><br>
+        <input type="text" name="email" placeholder="Email" required><br>
+        <input type="tel" name="phno" placeholder="Ph No." required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+        <select>
+            <label>Select Branch</label>
+            <option>ECE</option>
+            <option>IT</option>
+            <option>CSE</option>
+        </select>
+        <br><input type="submit" name="submit" value="Submit">
+    </form>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php 
+
+include('connection.php'); 
+
+$query = "SELECT * FROM goodsregister";
+$result = mysqli_query($conn, $query);
+
+?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../bootstrap/css/fontawesome-all.css">
+    <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../bootstrap/css/mdb.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.jqueryui.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js"></script>
+    <title>eCommerce project</title>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <a class="navbar-brand" href="index.php">eCommerce</a>
+    <a class="text-warning ml-auto" href="index.php">Home</a>
+    <a class="text-warning ml-4" href="#">About Us</a>
+    <a class="text-warning ml-4" href="#">Contact Us</a>
+    <a class="text-warning ml-4" href="goodsregister.php">Admin</a>
+    <div class="dropdown">
+        <a class="text-warning ml-4 mr-4 dropdown-toggle text-warning" data-toggle="dropdown" href="#">Category</a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="laptop.php">Laptop</a>
+            <a class="dropdown-item" href="desktop.php">Desktop</a>
+            <a class="dropdown-item" href="smartphone.php">Smart Phones</a>
+            <a class="dropdown-item" href="tablet.php">Tablet</a>
+        </div>
+    </div>
+<!-- The form -->
+        <form class="example" action="index.php">
+            <input type="text" placeholder="Search.." name="search">
+                <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+<!-- cart -->
+    <a class="ml-4 text-info" href="#">
+          Cart
+    </a>
+    <a class="ml-4 text-info" href="login.php">Login</a>
+    <a class="ml-4 text-info" href="registraction.php">Sign Up</a>
+    <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</nav>
+
+<div class="container mt-5">
+
+<?php 
+        
+        $sql="select c.*,s.* from stock s left join category c on c.c_id=s.category_id";
+        $result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+        $data[]= $row;
+    }
+} 
+$conn->close();
+        
+?>
+    
+<h3>Stock Details :</h2>
+<table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category Name</th>
+                <th>Qty</th>
+                <th>Purchase Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($data as $value){?>
+            <tr>
+                <td><?php echo $value['productname'];?></td>
+                <td><?php echo $value['category_name'];?></td>
+                <td><?php echo $value['qty'];?></td>
+                <td><?php if($value['purchase_status'] == '0'){echo "Not Purchased";}else{ echo "Purchased";}?></td>           
+            </tr>
+            <?php }?>
+        
+        </tbody>
+        
+    </table>
+    <br>
+    <h3>Customer & Stock Details</h2>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Category Name</th>
+                <th>Qty Available</th>
+                <th>Purchase Status</th>
+                <th>Action</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($data as $value){?>
+            <tr>
+                <td><?php echo $value['productname'];?></td>
+                <td><?php echo $value['category_name'];?></td>
+                <td><?php echo $value['qty'];?></td>
+                <td><?php if($value['purchase_status'] == '0'){echo "No one Purchased yet";}else{ echo "Purchased by some users";}?></td>
+                <td><a href="edit.php?id=<?php echo $value['id'];?>"><input type="submit" name="sumbit" value="update"></a></td>
+               
+            </tr>
+            <?php }?>
+        
+        </tbody>
+        
+    </table>
+<br>
+    <form action="insert1.php" method="post">
+        <input type="text" name="customer_name" placeholder="Customer Name"><br>
+        <input type="tel" maxlength="10" name="ph_no" placeholder="Ph No"><br>
+        <input type="text" name="productname" placeholder="Product Name"><br>
+        <input type="text" name="category_name" placeholder="Category Name"><br>
+        <input type="number" name="qty" placeholder="how much quantity you want">
+        <a href="edit.php?id=<?php echo $value['id'];?>"><input type="submit" name="sumbit" value="update"></a>
+    </form>
+    
+    
+    
+        </body>
+</html>
+    <script>$(document).ready(function() {
+    $('#example').DataTable();
+} );</script>
+
+
+
+
+
+
+
+</div>
+    <br><br><br>
+<div class="footer bg-dark text-secondary p-4 text-center">
+    <h4>Copy rights by <a href="https://narendrareddy924.github.io/"><i class="fa fa-user-circle"></i>Narendra Reddy</a></h4>
+</div>
+    
+
+<!-- BODY ENDS -->
+<script src="../bootstrap/js/fontawesome-all.js"></script>
+<script src="../bootstrap/js/jquery-3.2.1.min.js"></script>
+<script src="../bootstrap/js/popper.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../bootstrap/js/mdb.min.js"></script>
+</body>
+</html>
