@@ -13,25 +13,26 @@ if(isset($_POST["submit"]))
     $category_id= $_POST["category_id"];
     $product= $_POST["productname"];
     $qty = $_POST["qty"];
-    $query1 = "INSERT INTO admin (customer_name, ph_no, category_id, productname, qty)"
+    $insert = mysqli_prepare($conn, "INSERT INTO admin (customer_name, ph_no, category_id, productname, qty) VALUES (?, ?, ?, ?, ?)");
+    mysqli_stmt_bind_param($insert, "sssss", $name, $ph_no, $category_id, $product, $qty);
 
-        ."VALUES"."('".$name."','".$ph_no."','".$category_id."','".$product."','".$qty."')";
-
-
-    if(mysqli_query($conn, $query1)){
+    if(mysqli_stmt_execute($insert)){
         $quantity=0;
-        $query="select qty from stock where productname=".$product;
-        $result=mysqli_query($conn,$query);
+        $select = mysqli_prepare($conn, "SELECT qty FROM stock WHERE productname = ?");
+        mysqli_stmt_bind_param($select, "s", $product);
+        mysqli_stmt_execute($select);
+        $result = mysqli_stmt_get_result($select);
     
         if($row=mysqli_fetch_assoc($result))
             $quantity=$row["qty"];
             $newQty=$quantity-$qty;
     
-            $query="update stock set qty=".$newQty." where category_id=".$category_id;
-            mysqli_query($conn,$query);
+            $update = mysqli_prepare($conn, "UPDATE stock SET qty = ? WHERE category_id = ?");
+            mysqli_stmt_bind_param($update, "is", $newQty, $category_id);
+            mysqli_stmt_execute($update);
 	       echo "new record in data base";
         } else{
-	       echo "Error: ".$query1. "<br>" . mysqli_error($conn);
+	       echo "Error inserting record<br>" . mysqli_error($conn);
 
         }
     }
