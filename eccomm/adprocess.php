@@ -1,16 +1,20 @@
 <?php
-$email=$_POST['email'];
-$pass=$_POST['password'];
+$email = isset($_POST['email']) ? $_POST['email'] : '';
+$pass = isset($_POST['password']) ? $_POST['password'] : '';
 require_once('connection.php');
 
-        if(empty($email) || empty($pass))
-        {
-            header("location:adminlog.php?Empty= Plz Enter the fields");
-        }
-        elseif ($email=="rpramesh98@gmail.com" && $pass=="prakash1212") {
-            header("location:adminhome.php?Empty= Login Sucessfull");
-        }
-        else{
-                header("location:adminlog.php?Invalid= Plz Enter Correct UserName And Password");
-            }
+$adminEmail = getenv('ADMIN_EMAIL');
+$adminPassword = getenv('ADMIN_PASSWORD');
+
+if (empty($email) || empty($pass)) {
+    header("location:adminlog.php?Empty= Plz Enter the fields");
+    exit;
+}
+
+if ($adminEmail && $adminPassword && hash_equals($adminEmail, $email) && hash_equals($adminPassword, $pass)) {
+    header("location:adminhome.php?Empty= Login Sucessfull");
+    exit;
+}
+
+header("location:adminlog.php?Invalid= Plz Enter Correct UserName And Password");
 ?>
